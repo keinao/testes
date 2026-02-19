@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Ochiii 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a0010 0%, #2d0020 40%, #1a0035 100%);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* ── background stars ── */
+    .star {
+      position: fixed;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%,100%{opacity:.08} 50%{opacity:.9}
+    }
+
+    /* ── particles ── */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: rise linear infinite;
+    }
+    @keyframes rise {
+      from { transform: translateY(110vh); opacity:0 }
+      10%  { opacity:.8 }
+      90%  { opacity:.4 }
+      to   { transform: translateY(-10vh); opacity:0 }
+    }
+
+    /* ════════════════════════════════
+       SCREEN 1 — ENVELOPE (closed)
+    ════════════════════════════════ */
+    #screen-envelope {
+      position: relative;
+      width: 480px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* glow behind envelope */
+    #screen-envelope::before {
+      content:'';
+      position:absolute;
+      inset:-50px;
+      border-radius:40px;
+      background: radial-gradient(ellipse, rgba(244,114,182,.22) 0%, transparent 65%);
+      animation: glow 3s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes glow {
+      0%,100%{transform:scale(1);opacity:.5}
+      50%{transform:scale(1.07);opacity:1}
+    }
+
+    /* envelope SVG-style built from divs */
+    .env-box {
+      position: relative;
+      width: 480px;
+      height: 300px;
+      border-radius: 12px;
+      background: linear-gradient(150deg, #fff0f5 0%, #ffdcec 100%);
+      box-shadow:
+        0 0 0 1px rgba(244,114,182,.2),
+        0 20px 60px rgba(80,0,30,.6),
+        0 6px 18px rgba(244,114,182,.2);
+      overflow: hidden;
+    }
+
+    /* left triangle */
+    .env-box::before {
+      content:'';
+      position:absolute;
+      top:0; left:0;
+      border-style:solid;
+      border-width: 150px 0 150px 240px;
+      border-color: transparent transparent transparent #f9c5dc;
+    }
+    /* right triangle */
+    .env-box::after {
+      content:'';
+      position:absolute;
+      top:0; right:0;
+      border-style:solid;
+      border-width: 150px 240px 150px 0;
+      border-color: transparent #f5b5d0 transparent transparent;
+    }
+
+    /* bottom triangle */
+    .env-bottom {
+      position:absolute;
+      bottom:0; left:0;
+      border-style:solid;
+      border-width: 0 240px 150px 240px;
+      border-color: transparent transparent #fbd8ea transparent;
+      z-index:2;
+    }
+
+    /* top flap */
+    .env-flap {
+      position:absolute;
+      top:0; left:0;
+      width:100%; height:150px;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      background: linear-gradient(170deg, #ffe0ef 0%, #f8a8c8 100%);
+      border-radius: 12px 12px 0 0;
+      z-index:3;
+      transform-origin: top center;
+      transition: transform .7s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* wax seal */
+    .seal {
+      position:absolute;
+      top:50%; left:50%;
+      transform: translate(-50%,-50%);
+      width:58px; height:58px;
+      background: radial-gradient(circle at 35% 35%, #f472b6, #be185d);
+      border-radius:50%;
+      z-index:4;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.35), 0 4px 14px rgba(190,24,93,.55);
+      transition: transform .3s, opacity .3s;
+    }
+    #screen-envelope:hover .seal {
+      transform: translate(-50%,-50%) scale(1.08);
+    }
+
+    /* front text — sits in bottom half */
+    .front-msg {
+      position:absolute;
+      bottom:0; left:0; right:0;
+      height:150px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:3;
+      gap:3px;
+      pointer-events:none;
+      transition: opacity .25s;
+    }
+    .front-for {
+      font-family:'Dancing Script',cursive;
+      font-size:13px;
+      color:#be185d;
+      letter-spacing:4px;
+      text-transform:uppercase;
+      opacity:.6;
+    }
+    .front-hb {
+      font-family:'Playfair Display',serif;
+      font-size:36px;
+      font-weight:700;
+      color:#7a1535;
+      line-height:1;
+    }
+    .front-hb em { font-style:italic; color:#d63368; }
+    .front-name {
+      font-family:'Dancing Script',cursive;
+      font-size:28px;
+      color:#be185d;
+    }
+
+    /* tap hint */
+    .tap-hint {
+      position:absolute;
+      bottom:12px; left:50%;
+      transform:translateX(-50%);
+      font-family:'Cormorant Garamond',serif;
+      font-size:11px;
+      color:#f472b6;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      white-space:nowrap;
+      z-index:5;
+      animation: bob 2s ease-in-out infinite;
+      transition: opacity .25s;
+    }
+    @keyframes bob {
+      0%,100%{opacity:.4;transform:translateX(-50%) translateY(0)}
+      50%{opacity:.9;transform:translateX(-50%) translateY(-4px)}
+    }
+
+    /* tagline under envelope */
+    .tagline {
+      text-align:center;
+      margin-top:18px;
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic;
+      color:rgba(252,183,203,.35);
+      font-size:12px;
+      letter-spacing:5px;
+      text-transform:uppercase;
+    }
+
+    /* ════════════════════════════════
+       SCREEN 2 — LETTER (hidden by default)
+    ════════════════════════════════ */
+    #screen-letter {
+      display:none;
+      position:relative;
+      width:460px;
+      animation: letter-appear .7s cubic-bezier(.34,1.4,.64,1) forwards;
+    }
+    @keyframes letter-appear {
+      from { opacity:0; transform:translateY(40px) scale(.95); }
+      to   { opacity:1; transform:translateY(0)    scale(1); }
+    }
+
+    .letter-card {
+      background: linear-gradient(155deg, #fffbfd 0%, #fff0f7 100%);
+      border-radius:16px;
+      padding:32px 36px 28px;
+      box-shadow:
+        0 0 0 1px rgba(244,114,182,.15),
+        0 16px 50px rgba(80,0,30,.5),
+        0 4px 16px rgba(244,114,182,.2),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* top decorative strip */
+    .letter-card::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0;
+      height:4px;
+      background: linear-gradient(90deg, #f472b6, #fb7185, #f9d96c, #f472b6);
+      background-size: 200%;
+      animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer {
+      from{background-position:0%}
+      to{background-position:200%}
+    }
+
+    /* horizontal rule */
+    .letter-card::after {
+      content:'';
+      position:absolute;
+      left:36px; right:36px;
+      top:82px;
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(244,114,182,.25), transparent);
+    }
+
+    .letter-deco {
+      position:absolute;
+      top:20px; right:24px;
+      font-size:18px;
+      opacity:.25;
+    }
+
+    .letter-from-label {
+      font-family:'Dancing Script',cursive;
+      font-size:12px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:#f472b6;
+      opacity:.7;
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .letter-text {
+      font-family:'Cormorant Garamond',serif;
+      font-size:22px;
+      font-style:italic;
+      color:#5c1530;
+      line-height:1.85;
+      margin-bottom:20px;
+    }
+
+    .letter-sig {
+      font-family:'Dancing Script',cursive;
+      font-size:26px;
+      color:#c2185b;
+      text-align:right;
+      margin-bottom:3px;
+    }
+    .letter-love {
+      font-family:'Playfair Display',serif;
+      font-style:italic;
+      font-size:17px;
+      color:#e91e63;
+      text-align:right;
+    }
+
+    /* Mini 3-tier cake */
+    .cake-area {
+      position:absolute;
+      left:26px; bottom:22px;
+    }
+    .cake-stack { display:flex; flex-direction:column; align-items:center; }
+    .candles-row { display:flex; gap:7px; margin-bottom:2px; }
+    .cndl {
+      width:7px; height:20px;
+      background: linear-gradient(180deg,#fce7f3,#fbcfe8);
+      border-radius:3px 3px 0 0;
+      position:relative;
+    }
+    .flm {
+      position:absolute;
+      top:-9px; left:50%;
+      transform:translateX(-50%);
+      width:7px; height:9px;
+      background: radial-gradient(circle at 50% 80%, #fef08a 0%, #fb923c 55%, transparent 100%);
+      border-radius:50% 50% 30% 30%;
+      animation: flicker .45s ease-in-out infinite alternate;
+    }
+    @keyframes flicker {
+      from{transform:translateX(-50%) scaleX(1) rotate(-4deg);opacity:.9}
+      to  {transform:translateX(-50%) scaleX(.8) rotate(4deg);opacity:1}
+    }
+    .ctier { border-radius:3px; height:16px; }
+    .ct3 { width:40px; background:linear-gradient(180deg,#f472b6,#db2777); }
+    .ct2 { width:54px; background:linear-gradient(180deg,#fb7185,#e11d48); }
+    .ct1 { width:68px; background:linear-gradient(180deg,#fbbf24,#d97706); }
+    .cbase{ width:76px; height:6px; background:#7c3aed; border-radius:0 0 4px 4px; }
+
+    /* ── floating hearts ── */
+    .heart {
+      position:fixed;
+      pointer-events:none;
+      z-index:99;
+      animation: hrise linear forwards;
+      opacity:0;
+    }
+    @keyframes hrise {
+      0%  {transform:translateY(0) rotate(0deg);opacity:0}
+      8%  {opacity:1}
+      100%{transform:translateY(-110vh) rotate(720deg);opacity:0}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SCREEN 1: ENVELOPE ── -->
+<div id="screen-envelope">
+  <div class="env-box">
+    <div class="env-bottom"></div>
+    <div class="env-flap" id="flap"></div>
+    <div class="seal" id="seal">🌸</div>
+    <div class="front-msg" id="front-msg">
+      <div class="front-hb">Happy <em>Birthday</em></div>
+      <div class="front-name">ochiii 🎂</div>
+    </div>
+    <div class="tap-hint" id="tap-hint">✦ tap to open ✦</div>
+  </div>
+  <div class="tagline">with love, always 💕</div>
+</div>
+
+<!-- ── SCREEN 2: LETTER (hidden) ── -->
+<div id="screen-letter">
+  <div class="letter-card">
+    <div class="letter-deco">🌸</div>
+    <div class="letter-from-label">✦ &nbsp; a little note for you &nbsp; ✦</div>
+    <div class="letter-text">
+      Happy birthday to the most handsome boy in omii's world 🌸<br>
+      May this year bring you joy, health, and everything you've been praying for. Stay patient with omii, okay? I love youu moyeee forever ❤️
+    </div>
+    <div class="letter-sig">From Omiii 🌸</div>
+    <div class="letter-love">I LOVE YOUU ❤️</div>
+
+    <div class="cake-area">
+      <div class="cake-stack">
+        <div class="candles-row">
+          <div class="cndl"><div class="flm"></div></div>
+          <div class="cndl"><div class="flm" style="animation-delay:.12s"></div></div>
+          <div class="cndl"><div class="flm" style="animation-delay:.27s"></div></div>
+        </div>
+        <div class="ctier ct3"></div>
+        <div class="ctier ct2"></div>
+        <div class="ctier ct1"></div>
+        <div class="cbase"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Stars ── */
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.5 + .5;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-duration:${Math.random()*3+2}s;animation-delay:${Math.random()*6}s;`;
+    document.body.appendChild(s);
+  }
+
+  /* ── Particles ── */
+  const pColors = ['#f472b6','#fb7185','#f9d96c','#c084fc','#a78bfa'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const sz = Math.random()*5+2;
+    p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${pColors[~~(Math.random()*pColors.length)]};animation-duration:${Math.random()*10+8}s;animation-delay:${Math.random()*12}s;`;
+    document.body.appendChild(p);
+  }
+
+  /* ── Hearts ── */
+  const hEmoji = ['❤️','💕','💗','💖','🌸','✨','💝','🩷','🌷'];
+  function heart() {
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = hEmoji[~~(Math.random()*hEmoji.length)];
+    h.style.cssText = `left:${Math.random()*90}%;bottom:0;font-size:${Math.random()*16+12}px;animation-duration:${Math.random()*3+4}s;animation-delay:${Math.random()*1.5}s;`;
+    document.body.appendChild(h);
+    h.addEventListener('animationend', () => h.remove());
+  }
+
+  /* ── Open logic: animate flap, then swap screens ── */
+  const envEl   = document.getElementById('screen-envelope');
+  const letterEl = document.getElementById('screen-letter');
+  const flap    = document.getElementById('flap');
+  const seal    = document.getElementById('seal');
+  const frontMsg = document.getElementById('front-msg');
+  const tapHint  = document.getElementById('tap-hint');
+  let opened = false;
+
+  envEl.addEventListener('click', () => {
+    if (opened) return;
+    opened = true;
+
+    /* 1. Hide hint & front text */
+    tapHint.style.opacity  = '0';
+    frontMsg.style.opacity = '0';
+    seal.style.opacity     = '0';
+
+    /* 2. Fold flap open */
+    flap.style.transform = 'rotateX(-180deg)';
+
+    /* 3. After flap animation, swap to letter screen */
+    setTimeout(() => {
+      envEl.style.display = 'none';
+      letterEl.style.display = 'block';
+
+      /* burst hearts */
+      for (let i = 0; i < 18; i++) setTimeout(heart, i * 120);
+      const iv = setInterval(() => { heart(); heart(); }, 2500);
+      setTimeout(() => clearInterval(iv), 15000);
+    }, 900);
+  });
+</script>
+</body>
+</html>
